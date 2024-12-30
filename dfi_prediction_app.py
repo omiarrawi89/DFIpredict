@@ -1,6 +1,10 @@
 import streamlit as st
 import numpy as np
 import pickle
+import matplotlib.pyplot as plt
+from io import BytesIO
+from fpdf import FPDF
+import plotly.graph_objects as go
 
 # Page config
 st.set_page_config(
@@ -30,29 +34,35 @@ def load_model():
 try:
     model = load_model()
     
+    # Sidebar Information
+    st.sidebar.title("About the Tool")
+    st.sidebar.info("""
+    This tool predicts Sperm DNA Fragmentation Percentage (DF%) based on motility and morphology parameters.
+    - Designed for educational purposes.
+    - Not a substitute for medical diagnostics.
+    """)
+    
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
-    This tool predicts the **DNA Fragmentation Percentage (DF%)** of sperm based on motility and morphology parameters.
-    It leverages an ensemble model combining Gradient Boosting, Random Forest, and Neural Network techniques.
-    """)
-
-    st.markdown("""
-    **Inputs Explained**:
-    - The model uses **five key features**: progressive motility, non-progressive motility, immotile percentage, sperm concentration, and normal sperm morphology.
-    - "Concentration" is included as it reflects the sperm count in a sample, which can influence DNA fragmentation levels.
+    Predict the **DNA Fragmentation Percentage (DF%)** of sperm using key parameters.
+    The model leverages an ensemble of Gradient Boosting, Random Forest, and Neural Network techniques.
     """)
 
     # Input parameters section with emojis and helper text
-    st.subheader('Input Parameters (Required)')
+    st.subheader('Input Parameters')
     progressive = st.number_input('🚀 Progressive Motility (%)', 0.0, 100.0, 50.0, 0.1, help="Typically 30-70%")
     non_progressive = st.number_input('🐢 Non-Progressive Motility (%)', 0.0, 100.0, 10.0, 0.1, help="Typically 5-20%")
     immotile = st.number_input('🛑 Immotile Sperm (%)', 0.0, 100.0, 40.0, 0.1, help="Typically 30-60%")
     concentration = st.number_input('🔬 Sperm Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1, help="Typically 15-100 million/mL")
     normal_sperm = st.number_input('🌟 Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1, help="Typically 4-14%")
 
-    # Add a predict button
-    if st.button('Predict DF%', type='primary'):
+    # Validate input consistency
+    if progressive + non_progressive + immotile != 100:
+        st.warning("The sum of motility percentages (Progressive, Non-Progressive, Immotile) should equal 100%.")
+    
+    # Add prediction button
+    if st.button('Predict DF%'):
         # Ensure input order matches model expectation
         input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm]])
         
@@ -78,25 +88,86 @@ try:
         st.metric(label="Predicted DF%", value=f"{prediction:.1f}% 🧬💦")
         st.write(f"Result: {result} {emoji}")
         
+        # Dynamic feedback
+        if concentration < 15:
+            st.info("Concentration is below the typical threshold (15 million/mL). Consider further analysis.")
+        if normal_sperm < 4:
+            st.warning("Normal Morphology is critically low (<4%). This may indicate a higher likelihood of DNA fragmentation.")
+
         # Add a colorful separator line
         st.markdown('---')
-        st.subheader('Interpretation Guide')
-        st.write("""
-        - 🟢 **DF% < 15%**: Generally considered normal/good fertility potential.
-        - 🟡 **DF% 15-25%**: Moderate fertility impact, may affect pregnancy outcomes.
-        - 🔴 **DF% > 25%**: Higher impact on fertility, may indicate need for additional evaluation.
-        """)
-        st.markdown("""
-        **Model Strengths**:
-        - High accuracy in predicting normal (≤15%) and average (15-30%) ranges.
-        - Consistent performance based on validation data.
+        st.subheader('Graphs and Visualizations')
+        
+        # Bar chart of input parameters
+        fig, ax = plt.subplots()
+        labels = ['Progressive', 'Non-Progressive', 'Immotile', 'Concentration', 'Normal Morphology']
+        values = [progressive, non_progressive, immotile, concentration, normal_sperm]
+        ax.bar(labels, values, color=['blue', 'green', 'red', 'purple', 'orange'])
+        ax.set_title('Input Parameters Overview')
+        ax.set_ylabel('Value')
+        st.pyplot(fig)
+        
+        # Radar chart
+        categories = ['Progressive', 'Non-Progressive', 'Immotile', 'Concentration', 'Normal Morphology']
+        fig = go.Figure()
+        fig.add_trace(go.Scatterpolar(
+            r=values,
+            theta=categories,
+            fill='toself',
+            name='Sperm Parameters'
+        ))
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True)),
+            showlegend=True
+        )
+        st.plotly_chart(fig)
 
-        **Model Limitations**:
-        - Tendency to overpredict average cases.
-        - Reduced accuracy for high DF% values (≥30%).
-        """)
+        # Add prediction history
+        if "history" not in st.session_state:
+            st.session_state.history = []
+        st.session_state.history.append({"Inputs": dict(zip(labels, values)), "DF%": prediction})
+
+        st.subheader("Prediction History")
+        if st.session_state.history:
+            st.write(st.session_state.history)
+        
+        # Report generation
+        def generate_report(inputs, prediction):
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            
+            # Title
+            pdf.set_font("Arial", size=16, style='B')
+            pdf.cell(200, 10, txt="Sperm DF% Prediction Report", ln=True, align='C')
+            pdf.ln(10)
+            
+            # Inputs Section
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt="Inputs Provided:", ln=True)
+            for key, value in inputs.items():
+                pdf.cell(200, 10, txt=f"- {key}: {value}", ln=True)
+            pdf.ln(10)
+            
+            # Prediction Section
+            pdf.set_font("Arial", size=14, style='B')
+            pdf.cell(200, 10, txt=f"Predicted DF%: {prediction:.1f}%", ln=True)
+            pdf.ln(10)
+            
+            # Footer
+            pdf.set_font("Arial", size=10)
+            pdf.cell(200, 10, txt="Disclaimer: This is not a diagnostic tool.", ln=True)
+            
+            buffer = BytesIO()
+            pdf.output(buffer)
+            buffer.seek(0)
+            return buffer
+
+        inputs = dict(zip(labels, values))
+        buffer = generate_report(inputs, prediction)
+        st.download_button(label="Download Report", data=buffer, file_name="df_prediction_report.pdf", mime="application/pdf")
     
-    # Add Disclaimer at the bottom
+    # Disclaimer
     st.markdown('---')
     st.markdown("""
     **Disclaimer**: This DF% prediction tool is not a diagnostic tool. It is based on a model built using **limited training data** 
