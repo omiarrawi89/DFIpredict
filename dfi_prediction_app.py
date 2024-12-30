@@ -9,16 +9,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for setting transparent background and image
+# Custom CSS for setting input styles and transparent background
 st.markdown("""
 <style>
-body {
-    background-image: url('https://stock.adobe.com/fr/images/abstract-digital-representation-of-glowing-blue-and-purple-dna-strands/865278004');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
 input {
     height: 30px !important;
     background-color: rgba(128, 0, 128, 0.1) !important; /* Transparent purple */
@@ -49,14 +42,6 @@ def load_model():
 
 try:
     model = load_model()
-
-    # Sidebar Information
-    st.sidebar.title("About the Tool")
-    st.sidebar.info("""
-    This tool predicts **DNA Fragmentation Percentage (DF%)** of sperm based on key **seminal fluid parameters**.
-    - Designed for educational purposes.
-    - Not a substitute for medical diagnostics.
-    """)
 
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
@@ -114,9 +99,4 @@ try:
     st.markdown("""
     **Disclaimer**: This DF% prediction tool is not a diagnostic tool. It is based on a model built using **limited training data** 
     and the **chromatin dispersion assay**. The results should be interpreted with caution and are not a substitute for medical advice 
-    or clinical diagnostics. Please consult a healthcare professional for proper evaluation.
-    """)
-
-except Exception as e:
-    st.error(f'An error occurred: {str(e)}')
-    st.info('Please make sure all model files are properly loaded and try again.')
+    or clinical diagnostics. Please consult a healthcare professional for proper e
