@@ -9,7 +9,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS to style the input fields and add tooltips next to them
+# Custom CSS to style the input fields
 st.markdown("""
 <style>
 input, .stNumberInput input {
@@ -41,43 +41,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 5px 0 !important;
 }
 
-.tooltip {
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-radius: 50%;
-    background-color: white;
-    color: black;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 200px;
-    background-color: rgba(128, 0, 128, 0.7);
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position above the text */
-    left: 50%;
-    margin-left: -100px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -94,49 +57,49 @@ try:
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
     Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques. 
-    The model uses the following DF% ranges for interpretation (referenced from the study **[10.1016/j.fertnstert.2004.07.115](https://doi.org/10.1016/j.fertnstert.2004.07.115)**)
+    The model uses the following DF% ranges for interpretation (referenced from the study **[10.1016/j.fertnstert.2004.07.115](https://doi.org/10.1016/j.fertnstert.2004.07.115)**):
     - **Low DNA fragmentation**: **<15%**
-    - **Moderate DNA fragmentation**: **15–30%**
+    - **Moderate DNA fragmentation**: **15–30%** (mean: 22.4, n=19)
     - **High DNA fragmentation**: **>30%**
     """)
 
-    # Input parameters section with hover tooltips
+    # Input parameters section with normal text descriptions
     st.subheader('Input Parameters')
 
     # Progressive Motility
     progressive = st.number_input(
-        '🚀 Progressive Motility (%)  ',
+        '🚀 Progressive Motility (%)',
         0.0, 100.0, 50.0, 0.1,
     )
-    st.markdown('<div class="tooltip" title="Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.">❓<span class="tooltiptext">Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.</span></div>', unsafe_allow_html=True)
+    st.write("Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.")
 
     # Non-Progressive Motility
     non_progressive = st.number_input(
-        '🐢 Non-Progressive Motility (%)  ',
+        '🐢 Non-Progressive Motility (%)',
         0.0, 100.0, 10.0, 0.1,
     )
-    st.markdown('<div class="tooltip" title="Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.">❓<span class="tooltiptext">Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.</span></div>', unsafe_allow_html=True)
+    st.write("Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.")
 
     # Immotile Sperm
     immotile = st.number_input(
-        '🛑 Immotile Sperm (%)  ',
+        '🛑 Immotile Sperm (%)',
         0.0, 100.0, 40.0, 0.1,
     )
-    st.markdown('<div class="tooltip" title="Immotile sperm are typically 30-60%. These sperm do not move.">❓<span class="tooltiptext">Immotile sperm are typically 30-60%. These sperm do not move.</span></div>', unsafe_allow_html=True)
+    st.write("Immotile sperm are typically 30-60%. These sperm do not move.")
 
     # Sperm Concentration
     concentration = st.number_input(
-        '🔬 Sperm Concentration (million/mL)  ',
+        '🔬 Sperm Concentration (million/mL)',
         0.0, 300.0, 50.0, 0.1,
     )
-    st.markdown('<div class="tooltip" title="Sperm concentration is usually between 15-100 million sperm per mL.">❓<span class="tooltiptext">Sperm concentration is usually between 15-100 million sperm per mL.</span></div>', unsafe_allow_html=True)
+    st.write("Sperm concentration is usually between 15-100 million sperm per mL.")
 
     # Normal Morphology
     normal_sperm = st.number_input(
-        '🌟 Normal Morphology (%)  ',
+        '🌟 Normal Morphology (%)',
         0.0, 100.0, 14.0, 0.1,
     )
-    st.markdown('<div class="tooltip" title="Normal sperm morphology is typically between 4-14%.">❓<span class="tooltiptext">Normal sperm morphology is typically between 4-14%.</span></div>', unsafe_allow_html=True)
+    st.write("Normal sperm morphology is typically between 4-14%.")
 
     # Validate input consistency
     if progressive + non_progressive + immotile != 100:
