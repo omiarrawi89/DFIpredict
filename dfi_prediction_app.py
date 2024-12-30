@@ -4,12 +4,12 @@ import pickle
 
 # Page config
 st.set_page_config(
-    page_title="DFI Prediction Tool",
+    page_title="Sperm DFI Prediction Tool",
     page_icon="🧬",
     layout="wide"
 )
 
-# Custom CSS for smaller input boxes and transparent purple color
+# Custom CSS for smaller input boxes and transparent purple background
 st.markdown("""
 <style>
 input {
@@ -31,22 +31,30 @@ try:
     model = load_model()
     
     # App title and description
-    st.title('🧬 DFI Prediction Tool')
-    st.write('Enter sperm parameters to predict DNA Fragmentation Index (DFI)')
-    
-    # Create a single column for inputs
-    st.subheader('Input Parameters')
+    st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
+    st.write("""
+    This tool predicts the **DNA Fragmentation Index (DFI)** of sperm using motility and morphology parameters.
+    It leverages an ensemble model combining Gradient Boosting, Random Forest, and Neural Network techniques.
+    """)
 
-    # Input fields with emojis and smaller number boxes
-    progressive = st.number_input('🚀 Progressive (%)', 0.0, 100.0, 50.0, 0.1)
-    non_progressive = st.number_input('🐢 Non-progressive (%)', 0.0, 100.0, 10.0, 0.1)
-    immotile = st.number_input('🛑 Immotile (%)', 0.0, 100.0, 40.0, 0.1)
-    concentration = st.number_input('🔬 Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1)
-    normal_sperm = st.number_input('🌟 Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1)
+    st.markdown("""
+    **Note**: This tool provides predictions based on:
+    - Limited training data
+    - Chromatin dispersion assay
+    - Strong performance in predicting DFI in the normal (≤15%) and average (15-30%) ranges.
+    """)
+    
+    # Input parameters section with emojis and helper text
+    st.subheader('Input Parameters (Required)')
+    progressive = st.number_input('🚀 Progressive Motility (%)', 0.0, 100.0, 50.0, 0.1, help="Typically 30-70%")
+    non_progressive = st.number_input('🐢 Non-Progressive Motility (%)', 0.0, 100.0, 10.0, 0.1, help="Typically 5-20%")
+    immotile = st.number_input('🛑 Immotile Sperm (%)', 0.0, 100.0, 40.0, 0.1, help="Typically 30-60%")
+    concentration = st.number_input('🔬 Sperm Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1, help="Typically 15-100 million/mL")
+    normal_sperm = st.number_input('🌟 Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1, help="Typically 4-14%")
 
     # Add a predict button
     if st.button('Predict DFI', type='primary'):
-        # Create input array
+        # Ensure input order matches model expectation
         input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm]])
         
         # Make prediction
@@ -67,8 +75,8 @@ try:
             result = "🔴 High fertility impact (DFI > 25%)"
             emoji = "😟"
         
-        # Display the result with DNA emoji
-        st.metric(label="Predicted DFI", value=f"{prediction:.1f}% 🧬")
+        # Display the result with DNA and sperm emojis
+        st.metric(label="Predicted DFI", value=f"{prediction:.1f}% 🧬💦")
         st.write(f"Result: {result} {emoji}")
         
         # Add a colorful separator line
@@ -78,6 +86,15 @@ try:
         - 🟢 **DFI < 15%**: Generally considered normal/good fertility potential.
         - 🟡 **DFI 15-25%**: Moderate fertility impact, may affect pregnancy outcomes.
         - 🔴 **DFI > 25%**: Higher impact on fertility, may indicate need for additional evaluation.
+        """)
+        st.markdown("""
+        **Model Strengths**:
+        - High accuracy in predicting normal (≤15%) and average (15-30%) ranges.
+        - Consistent performance based on validation data.
+
+        **Model Limitations**:
+        - Tendency to overpredict average cases.
+        - Reduced accuracy for high DFI values (≥30%).
         """)
     
     # Add Disclaimer at the bottom
