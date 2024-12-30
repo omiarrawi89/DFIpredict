@@ -94,10 +94,10 @@ try:
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
     Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques. 
-    The model uses the following DF% ranges, as referenced from the study **10.1016/j.fertnstert.2004.07.115**:
-    - **DF% < 15%**: Excellent fertility potential
-    - **15% ≤ DF% < 25%**: Moderate fertility impact
-    - **DF% ≥ 25%**: High fertility impact
+    The model uses the following DF% ranges for interpretation (referenced from the study **[10.1016/j.fertnstert.2004.07.115](https://doi.org/10.1016/j.fertnstert.2004.07.115)**):
+    - **Low DNA fragmentation**: **<15%**
+    - **Moderate DNA fragmentation**: **15–30%** (mean: 22.4, n=19)
+    - **High DNA fragmentation**: **>30%**
     """)
 
     # Input parameters section with hover tooltips
@@ -156,13 +156,13 @@ try:
 
         # Determine result interpretation with emojis
         if prediction < 15:
-            result = "🟢 Excellent fertility potential (DF% < 15%)"
+            result = "🟢 Low DNA fragmentation (DF% < 15%)"
             emoji = "😊"
-        elif prediction < 25:
-            result = "🟡 Moderate fertility impact (DF% 15-25%)"
+        elif prediction < 30:
+            result = "🟡 Moderate DNA fragmentation (DF% 15-30%)"
             emoji = "😐"
         else:
-            result = "🔴 High fertility impact (DF% > 25%)"
+            result = "🔴 High DNA fragmentation (DF% > 30%)"
             emoji = "😟"
 
         # Display the result with DNA and sperm emojis
