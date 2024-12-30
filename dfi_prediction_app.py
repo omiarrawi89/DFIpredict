@@ -55,17 +55,11 @@ try:
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
-    Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques.
-    """)
-
-    # WHO Normal Ranges
-    st.write("""
-    **WHO Normal Ranges:**
-    - Progressive Motility: 30-70%
-    - Non-Progressive Motility: 5-20%
-    - Immotile Sperm: 30-60%
-    - Sperm Concentration: 15-100 million/mL
-    - Normal Morphology: 4-14%
+    Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques. 
+    The model uses the following DF% ranges, as referenced from the study **10.1016/j.fertnstert.2004.07.115**:
+    - **DF% < 15%**: Excellent fertility potential
+    - **15% ≤ DF% < 25%**: Moderate fertility impact
+    - **DF% ≥ 25%**: High fertility impact
     """)
 
     # Input parameters section with question mark icons
@@ -73,23 +67,28 @@ try:
 
     # Progressive Motility
     progressive = st.number_input('🚀 Progressive Motility (%)  ', 0.0, 100.0, 50.0, 0.1)
-    st.info('Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.')
+    with st.expander("❓ Progressive Motility Info"):
+        st.write("Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.")
 
     # Non-Progressive Motility
     non_progressive = st.number_input('🐢 Non-Progressive Motility (%)  ', 0.0, 100.0, 10.0, 0.1)
-    st.info('Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.')
+    with st.expander("❓ Non-Progressive Motility Info"):
+        st.write("Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.")
 
     # Immotile Sperm
     immotile = st.number_input('🛑 Immotile Sperm (%)  ', 0.0, 100.0, 40.0, 0.1)
-    st.info('Immotile sperm are typically 30-60%. These sperm do not move.')
+    with st.expander("❓ Immotile Sperm Info"):
+        st.write("Immotile sperm are typically 30-60%. These sperm do not move.")
 
     # Sperm Concentration
     concentration = st.number_input('🔬 Sperm Concentration (million/mL)  ', 0.0, 300.0, 50.0, 0.1)
-    st.info('Sperm concentration is usually between 15-100 million sperm per mL.')
+    with st.expander("❓ Sperm Concentration Info"):
+        st.write("Sperm concentration is usually between 15-100 million sperm per mL.")
 
     # Normal Morphology
     normal_sperm = st.number_input('🌟 Normal Morphology (%)  ', 0.0, 100.0, 14.0, 0.1)
-    st.info('Normal sperm morphology is typically between 4-14%.')
+    with st.expander("❓ Normal Morphology Info"):
+        st.write("Normal sperm morphology is typically between 4-14%.")
 
     # Validate input consistency
     if progressive + non_progressive + immotile != 100:
