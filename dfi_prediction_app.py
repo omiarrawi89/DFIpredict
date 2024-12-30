@@ -1,7 +1,5 @@
 import streamlit as st
 import numpy as np
-import pandas as pd
-from sklearn.ensemble import RandomForestRegressor
 import pickle
 
 # Page config
@@ -24,25 +22,20 @@ try:
     st.title('🧬 DFI Prediction Tool')
     st.write('Enter sperm parameters to predict DNA Fragmentation Index (DFI)')
     
-    # Create two columns for inputs
-    col1, col2 = st.columns(2)
+    # Create a single column for input
+    st.subheader('Motility Parameters')
+    progressive = st.number_input('Progressive (%)', 0.0, 100.0, 50.0, 0.1)
+    non_progressive = st.number_input('Non-progressive (%)', 0.0, 100.0, 10.0, 0.1)
+    immotile = st.number_input('Immotile (%)', 0.0, 100.0, 40.0, 0.1)
     
-    with col1:
-        st.subheader('Motility Parameters')
-        progressive = st.number_input('Progressive (%)', 0.0, 100.0, 50.0, 0.1)
-        non_progressive = st.number_input('Non-progressive (%)', 0.0, 100.0, 10.0, 0.1)
-        immotile = st.number_input('Immotile (%)', 0.0, 100.0, 40.0, 0.1)
-    
-    with col2:
-        st.subheader('Other Parameters')
-        concentration = st.number_input('Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1)
-        normal_sperm = st.number_input('Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1)
-        volume = st.number_input('Volume (mL)', 0.0, 10.0, 2.0, 0.1)  # New parameter
-    
+    st.subheader('Other Parameters')
+    concentration = st.number_input('Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1)
+    normal_sperm = st.number_input('Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1)
+
     # Add a predict button
     if st.button('Predict DFI', type='primary'):
-        # Create input array
-        input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm, volume]])
+        # Create input array (without volume)
+        input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm]])
         
         # Make prediction
         prediction = model.predict(input_features)[0]
