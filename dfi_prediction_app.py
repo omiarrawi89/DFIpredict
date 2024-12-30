@@ -1,4 +1,4 @@
-import streamlit as st
+trimport streamlit as st
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
@@ -37,7 +37,7 @@ try:
     # Sidebar Information
     st.sidebar.title("About the Tool")
     st.sidebar.info("""
-    This tool predicts Sperm DNA Fragmentation Percentage (DF%) based on motility and morphology parameters.
+    This tool predicts Sperm DNA Fragmentation Percentage (DF%) based on concentration, motility and morphology parameters.
     - Designed for educational purposes.
     - Not a substitute for medical diagnostics.
     """)
