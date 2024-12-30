@@ -96,7 +96,7 @@ try:
     Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques. 
     The model uses the following DF% ranges for interpretation (referenced from the study **[10.1016/j.fertnstert.2004.07.115](https://doi.org/10.1016/j.fertnstert.2004.07.115)**):
     - **Low DNA fragmentation**: **<15%**
-    - **Moderate DNA fragmentation**: **15–30%** (mean: 22.4, n=19)
+    - **Moderate DNA fragmentation**: **15–30%**
     - **High DNA fragmentation**: **>30%**
     """)
 
