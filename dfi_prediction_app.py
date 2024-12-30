@@ -29,13 +29,58 @@ def load_model():
 
 try:
     model = load_model()
-    
+
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
     Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on key **seminal fluid parameters**.
     The model uses a combination of various techniques to provide an accurate estimate of sperm DNA fragmentation.
     """)
+
+    # Input parameters section with emojis and helper text
+    st.subheader('Input Parameters')
+    progressive = st.number_input('🚀 Progressive Motility (%)', 0.0, 100.0, 50.0, 0.1, help="Typically 30-70%")
+    non_progressive = st.number_input('🐢 Non-Progressive Motility (%)', 0.0, 100.0, 10.0, 0.1, help="Typically 5-20%")
+    immotile = st.number_input('🛑 Immotile Sperm (%)', 0.0, 100.0, 40.0, 0.1, help="Typically 30-60%")
+    concentration = st.number_input('🔬 Sperm Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1, help="Typically 15-100 million/mL")
+    normal_sperm = st.number_input('🌟 Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1, help="Typically 4-14%")
+
+    # Validate input consistency
+    if progressive + non_progressive + immotile != 100:
+        st.warning("The sum of motility percentages (Progressive, Non-Progressive, Immotile) should equal 100%.")
+    
+    # Add prediction button
+    if st.button('Predict DF%'):
+        # Ensure input order matches model expectation
+        input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm]])
+        
+        # Make prediction
+        prediction = model.predict(input_features)[0]
+        
+        # Display results
+        st.markdown('---')
+        st.subheader('Prediction Results')
+        
+        # Determine result interpretation with emojis
+        if prediction < 15:
+            result = "🟢 Excellent fertility potential (DF% < 15%)"
+            emoji = "😊"
+        elif prediction < 25:
+            result = "🟡 Moderate fertility impact (DF% 15-25%)"
+            emoji = "😐"
+        else:
+            result = "🔴 High fertility impact (DF% > 25%)"
+            emoji = "😟"
+        
+        # Display the result with DNA and sperm emojis
+        st.metric(label="Predicted DF%", value=f"{prediction:.1f}% 🧬💦")
+        st.write(f"Result: {result} {emoji}")
+        
+        # Dynamic feedback
+        if concentration < 15:
+            st.info("Concentration is below the typical threshold (15 million/mL). Consider further analysis.")
+        if normal_sperm < 4:
+            st.warning("Normal Morphology is critically low (<4%). This may indicate a higher likelihood of DNA fragmentation.")
 
     # Disclaimer
     st.markdown('---')
