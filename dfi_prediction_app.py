@@ -4,7 +4,7 @@ import pickle
 
 # Page config
 st.set_page_config(
-    page_title="Sperm DFI Prediction Tool",
+    page_title="Sperm DF% Prediction Tool",
     page_icon="🧬",
     layout="wide"
 )
@@ -33,17 +33,16 @@ try:
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
-    This tool predicts the **DNA Fragmentation Index (DFI)** of sperm using motility and morphology parameters.
+    This tool predicts the **DNA Fragmentation Percentage (DF%)** of sperm based on motility and morphology parameters.
     It leverages an ensemble model combining Gradient Boosting, Random Forest, and Neural Network techniques.
     """)
 
     st.markdown("""
-    **Note**: This tool provides predictions based on:
-    - Limited training data
-    - Chromatin dispersion assay
-    - Strong performance in predicting DFI in the normal (≤15%) and average (15-30%) ranges.
+    **Inputs Explained**:
+    - The model uses **five key features**: progressive motility, non-progressive motility, immotile percentage, sperm concentration, and normal sperm morphology.
+    - "Concentration" is included as it reflects the sperm count in a sample, which can influence DNA fragmentation levels.
     """)
-    
+
     # Input parameters section with emojis and helper text
     st.subheader('Input Parameters (Required)')
     progressive = st.number_input('🚀 Progressive Motility (%)', 0.0, 100.0, 50.0, 0.1, help="Typically 30-70%")
@@ -53,7 +52,7 @@ try:
     normal_sperm = st.number_input('🌟 Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1, help="Typically 4-14%")
 
     # Add a predict button
-    if st.button('Predict DFI', type='primary'):
+    if st.button('Predict DF%', type='primary'):
         # Ensure input order matches model expectation
         input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm]])
         
@@ -66,26 +65,26 @@ try:
         
         # Determine result interpretation with emojis
         if prediction < 15:
-            result = "🟢 Excellent fertility potential (DFI < 15%)"
+            result = "🟢 Excellent fertility potential (DF% < 15%)"
             emoji = "😊"
         elif prediction < 25:
-            result = "🟡 Moderate fertility impact (DFI 15-25%)"
+            result = "🟡 Moderate fertility impact (DF% 15-25%)"
             emoji = "😐"
         else:
-            result = "🔴 High fertility impact (DFI > 25%)"
+            result = "🔴 High fertility impact (DF% > 25%)"
             emoji = "😟"
         
         # Display the result with DNA and sperm emojis
-        st.metric(label="Predicted DFI", value=f"{prediction:.1f}% 🧬💦")
+        st.metric(label="Predicted DF%", value=f"{prediction:.1f}% 🧬💦")
         st.write(f"Result: {result} {emoji}")
         
         # Add a colorful separator line
         st.markdown('---')
         st.subheader('Interpretation Guide')
         st.write("""
-        - 🟢 **DFI < 15%**: Generally considered normal/good fertility potential.
-        - 🟡 **DFI 15-25%**: Moderate fertility impact, may affect pregnancy outcomes.
-        - 🔴 **DFI > 25%**: Higher impact on fertility, may indicate need for additional evaluation.
+        - 🟢 **DF% < 15%**: Generally considered normal/good fertility potential.
+        - 🟡 **DF% 15-25%**: Moderate fertility impact, may affect pregnancy outcomes.
+        - 🔴 **DF% > 25%**: Higher impact on fertility, may indicate need for additional evaluation.
         """)
         st.markdown("""
         **Model Strengths**:
@@ -94,13 +93,13 @@ try:
 
         **Model Limitations**:
         - Tendency to overpredict average cases.
-        - Reduced accuracy for high DFI values (≥30%).
+        - Reduced accuracy for high DF% values (≥30%).
         """)
     
     # Add Disclaimer at the bottom
     st.markdown('---')
     st.markdown("""
-    **Disclaimer**: This DFI% prediction tool is not a diagnostic tool. It is based on a model built using **limited training data** 
+    **Disclaimer**: This DF% prediction tool is not a diagnostic tool. It is based on a model built using **limited training data** 
     and the **chromatin dispersion assay**. The results should be interpreted with caution and are not a substitute for medical advice 
     or clinical diagnostics. Please consult a healthcare professional for proper evaluation.
     """)
