@@ -58,13 +58,38 @@ try:
     Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques.
     """)
 
-    # Input parameters section
+    # WHO Normal Ranges
+    st.write("""
+    **WHO Normal Ranges:**
+    - Progressive Motility: 30-70%
+    - Non-Progressive Motility: 5-20%
+    - Immotile Sperm: 30-60%
+    - Sperm Concentration: 15-100 million/mL
+    - Normal Morphology: 4-14%
+    """)
+
+    # Input parameters section with question mark icons
     st.subheader('Input Parameters')
-    progressive = st.number_input('🚀 Progressive Motility (%)', 0.0, 100.0, 50.0, 0.1, help="Typically 30-70%")
-    non_progressive = st.number_input('🐢 Non-Progressive Motility (%)', 0.0, 100.0, 10.0, 0.1, help="Typically 5-20%")
-    immotile = st.number_input('🛑 Immotile Sperm (%)', 0.0, 100.0, 40.0, 0.1, help="Typically 30-60%")
-    concentration = st.number_input('🔬 Sperm Concentration (million/mL)', 0.0, 300.0, 50.0, 0.1, help="Typically 15-100 million/mL")
-    normal_sperm = st.number_input('🌟 Normal Morphology (%)', 0.0, 100.0, 14.0, 0.1, help="Typically 4-14%")
+
+    # Progressive Motility
+    progressive = st.number_input('🚀 Progressive Motility (%)  ', 0.0, 100.0, 50.0, 0.1)
+    st.info('Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.')
+
+    # Non-Progressive Motility
+    non_progressive = st.number_input('🐢 Non-Progressive Motility (%)  ', 0.0, 100.0, 10.0, 0.1)
+    st.info('Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.')
+
+    # Immotile Sperm
+    immotile = st.number_input('🛑 Immotile Sperm (%)  ', 0.0, 100.0, 40.0, 0.1)
+    st.info('Immotile sperm are typically 30-60%. These sperm do not move.')
+
+    # Sperm Concentration
+    concentration = st.number_input('🔬 Sperm Concentration (million/mL)  ', 0.0, 300.0, 50.0, 0.1)
+    st.info('Sperm concentration is usually between 15-100 million sperm per mL.')
+
+    # Normal Morphology
+    normal_sperm = st.number_input('🌟 Normal Morphology (%)  ', 0.0, 100.0, 14.0, 0.1)
+    st.info('Normal sperm morphology is typically between 4-14%.')
 
     # Validate input consistency
     if progressive + non_progressive + immotile != 100:
