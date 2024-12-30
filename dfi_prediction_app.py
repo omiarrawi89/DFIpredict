@@ -99,4 +99,9 @@ try:
     st.markdown("""
     **Disclaimer**: This DF% prediction tool is not a diagnostic tool. It is based on a model built using **limited training data** 
     and the **chromatin dispersion assay**. The results should be interpreted with caution and are not a substitute for medical advice 
-    or clinical diagnostics. Please consult a healthcare professional for proper e
+    or clinical diagnostics. Please consult a healthcare professional for proper evaluation.
+    """)
+
+except Exception as e:
+    st.error(f'An error occurred: {str(e)}')
+    st.info('Please make sure all model files are properly loaded and try again.')
