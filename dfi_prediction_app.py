@@ -9,18 +9,23 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for setting input styles and transparent background
+# Custom CSS to set input styles and make input fields narrower
 st.markdown("""
 <style>
-input {
-    height: 30px !important;
+input, .stNumberInput input {
+    width: 200px !important;  /* Adjust width of input fields */
+    height: 30px !important;  /* Adjust height of input fields */
     background-color: rgba(128, 0, 128, 0.1) !important; /* Transparent purple */
     border-radius: 8px !important;
     font-size: 16px !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color: white !important;
+.stTextInput input {
+    width: 200px !important;  /* Adjust width of text input fields */
+}
+
+div.stNumberInput > div {
+    width: 200px !important;  /* Adjust width for number input */
 }
 
 div.stButton > button {
@@ -28,8 +33,12 @@ div.stButton > button {
     color: white !important;
 }
 
-.stTextInput input {
-    background-color: rgba(128, 0, 128, 0.1) !important;
+h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+}
+
+.stTextInput, .stNumberInput {
+    margin: 5px 0 !important;
 }
 </style>
 """, unsafe_allow_html=True)
