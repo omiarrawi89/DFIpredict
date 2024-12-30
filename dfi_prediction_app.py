@@ -1,10 +1,6 @@
 import streamlit as st
 import numpy as np
 import pickle
-import matplotlib.pyplot as plt
-from io import BytesIO
-from fpdf import FPDF
-import plotly.graph_objects as go
 
 # Page config
 st.set_page_config(
@@ -41,7 +37,7 @@ try:
     - Designed for educational purposes.
     - Not a substitute for medical diagnostics.
     """)
-    
+
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
@@ -94,79 +90,6 @@ try:
         if normal_sperm < 4:
             st.warning("Normal Morphology is critically low (<4%). This may indicate a higher likelihood of DNA fragmentation.")
 
-        # Add a colorful separator line
-        st.markdown('---')
-        st.subheader('Graphs and Visualizations')
-        
-        # Bar chart of input parameters
-        fig, ax = plt.subplots()
-        labels = ['Progressive', 'Non-Progressive', 'Immotile', 'Concentration', 'Normal Morphology']
-        values = [progressive, non_progressive, immotile, concentration, normal_sperm]
-        ax.bar(labels, values, color=['blue', 'green', 'red', 'purple', 'orange'])
-        ax.set_title('Input Parameters Overview')
-        ax.set_ylabel('Value')
-        st.pyplot(fig)
-        
-        # Radar chart
-        categories = ['Progressive', 'Non-Progressive', 'Immotile', 'Concentration', 'Normal Morphology']
-        fig = go.Figure()
-        fig.add_trace(go.Scatterpolar(
-            r=values,
-            theta=categories,
-            fill='toself',
-            name='Sperm Parameters'
-        ))
-        fig.update_layout(
-            polar=dict(radialaxis=dict(visible=True)),
-            showlegend=True
-        )
-        st.plotly_chart(fig)
-
-        # Add prediction history
-        if "history" not in st.session_state:
-            st.session_state.history = []
-        st.session_state.history.append({"Inputs": dict(zip(labels, values)), "DF%": prediction})
-
-        st.subheader("Prediction History")
-        if st.session_state.history:
-            st.write(st.session_state.history)
-        
-        # Report generation
-        def generate_report(inputs, prediction):
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=12)
-            
-            # Title
-            pdf.set_font("Arial", size=16, style='B')
-            pdf.cell(200, 10, txt="Sperm DF% Prediction Report", ln=True, align='C')
-            pdf.ln(10)
-            
-            # Inputs Section
-            pdf.set_font("Arial", size=12)
-            pdf.cell(200, 10, txt="Inputs Provided:", ln=True)
-            for key, value in inputs.items():
-                pdf.cell(200, 10, txt=f"- {key}: {value}", ln=True)
-            pdf.ln(10)
-            
-            # Prediction Section
-            pdf.set_font("Arial", size=14, style='B')
-            pdf.cell(200, 10, txt=f"Predicted DF%: {prediction:.1f}%", ln=True)
-            pdf.ln(10)
-            
-            # Footer
-            pdf.set_font("Arial", size=10)
-            pdf.cell(200, 10, txt="Disclaimer: This is not a diagnostic tool.", ln=True)
-            
-            buffer = BytesIO()
-            pdf.output(buffer)
-            buffer.seek(0)
-            return buffer
-
-        inputs = dict(zip(labels, values))
-        buffer = generate_report(inputs, prediction)
-        st.download_button(label="Download Report", data=buffer, file_name="df_prediction_report.pdf", mime="application/pdf")
-    
     # Disclaimer
     st.markdown('---')
     st.markdown("""
