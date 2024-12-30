@@ -9,14 +9,34 @@ st.set_page_config(
     layout="wide"
 )
 
-# Custom CSS for smaller input boxes and transparent purple background
+# Custom CSS for setting transparent background and image
 st.markdown("""
 <style>
+body {
+    background-image: url('https://stock.adobe.com/fr/images/abstract-digital-representation-of-glowing-blue-and-purple-dna-strands/865278004');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 input {
     height: 30px !important;
     background-color: rgba(128, 0, 128, 0.1) !important; /* Transparent purple */
     border-radius: 8px !important;
     font-size: 16px !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+}
+
+div.stButton > button {
+    background-color: rgba(128, 0, 128, 0.7) !important;
+    color: white !important;
+}
+
+.stTextInput input {
+    background-color: rgba(128, 0, 128, 0.1) !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -30,14 +50,21 @@ def load_model():
 try:
     model = load_model()
 
+    # Sidebar Information
+    st.sidebar.title("About the Tool")
+    st.sidebar.info("""
+    This tool predicts **DNA Fragmentation Percentage (DF%)** of sperm based on key **seminal fluid parameters**.
+    - Designed for educational purposes.
+    - Not a substitute for medical diagnostics.
+    """)
+
     # App title and description
     st.title('🧬 Sperm DNA Fragmentation Percentage Prediction Tool 💦')
     st.write("""
-    Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on key **seminal fluid parameters**.
-    The model uses a combination of various techniques to provide an accurate estimate of sperm DNA fragmentation.
+    Predict the **DNA Fragmentation Percentage (DF%)** of sperm based on **progressive motility**, **non-progressive motility**, **immotile sperm**, **sperm concentration**, and **normal morphology**, using an ensemble of **Gradient Boosting**, **Random Forest**, and **Neural Network** techniques.
     """)
 
-    # Input parameters section with emojis and helper text
+    # Input parameters section
     st.subheader('Input Parameters')
     progressive = st.number_input('🚀 Progressive Motility (%)', 0.0, 100.0, 50.0, 0.1, help="Typically 30-70%")
     non_progressive = st.number_input('🐢 Non-Progressive Motility (%)', 0.0, 100.0, 10.0, 0.1, help="Typically 5-20%")
@@ -53,14 +80,14 @@ try:
     if st.button('Predict DF%'):
         # Ensure input order matches model expectation
         input_features = np.array([[progressive, immotile, non_progressive, concentration, normal_sperm]])
-        
+
         # Make prediction
         prediction = model.predict(input_features)[0]
-        
+
         # Display results
         st.markdown('---')
         st.subheader('Prediction Results')
-        
+
         # Determine result interpretation with emojis
         if prediction < 15:
             result = "🟢 Excellent fertility potential (DF% < 15%)"
@@ -71,11 +98,11 @@ try:
         else:
             result = "🔴 High fertility impact (DF% > 25%)"
             emoji = "😟"
-        
+
         # Display the result with DNA and sperm emojis
         st.metric(label="Predicted DF%", value=f"{prediction:.1f}% 🧬💦")
         st.write(f"Result: {result} {emoji}")
-        
+
         # Dynamic feedback
         if concentration < 15:
             st.info("Concentration is below the typical threshold (15 million/mL). Consider further analysis.")
