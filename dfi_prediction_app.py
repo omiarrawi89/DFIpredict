@@ -85,7 +85,7 @@ try:
         '🛑 Immotile Sperm (%)',
         0.0, 100.0, 40.0, 0.1,
     )
-    st.write("Immotile sperm are typically 30-60%. These sperm do not move.")
+    st.write("Immotile sperm are the sperm that do not move.")
 
     # Sperm Concentration
     concentration = st.number_input(
@@ -99,7 +99,7 @@ try:
         '🌟 Normal Morphology (%)',
         0.0, 100.0, 14.0, 0.1,
     )
-    st.write("Normal sperm morphology is typically between 4-14%.")
+    st.write("Normal sperm morphology is typically more than 4%.")
 
     # Validate input consistency
     if progressive + non_progressive + immotile != 100:
