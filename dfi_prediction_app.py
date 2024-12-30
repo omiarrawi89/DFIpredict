@@ -42,10 +42,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tooltip {
-    position: relative;
-    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    background-color: white;
+    color: black;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
     cursor: pointer;
-    border-bottom: 1px dotted black;
+    z-index: 10;
 }
 
 .tooltip .tooltiptext {
@@ -99,35 +108,35 @@ try:
         '🚀 Progressive Motility (%)  ',
         0.0, 100.0, 50.0, 0.1,
     )
-    st.markdown('<div class="tooltip">❓<span class="tooltiptext">Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="tooltip" title="Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.">❓<span class="tooltiptext">Progressive motility typically falls between 30-70%. Higher motility indicates better sperm movement.</span></div>', unsafe_allow_html=True)
 
     # Non-Progressive Motility
     non_progressive = st.number_input(
         '🐢 Non-Progressive Motility (%)  ',
         0.0, 100.0, 10.0, 0.1,
     )
-    st.markdown('<div class="tooltip">❓<span class="tooltiptext">Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="tooltip" title="Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.">❓<span class="tooltiptext">Non-progressive motility usually ranges between 5-20%. It refers to sperm that moves but not effectively.</span></div>', unsafe_allow_html=True)
 
     # Immotile Sperm
     immotile = st.number_input(
         '🛑 Immotile Sperm (%)  ',
         0.0, 100.0, 40.0, 0.1,
     )
-    st.markdown('<div class="tooltip">❓<span class="tooltiptext">Immotile sperm are typically 30-60%. These sperm do not move.</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="tooltip" title="Immotile sperm are typically 30-60%. These sperm do not move.">❓<span class="tooltiptext">Immotile sperm are typically 30-60%. These sperm do not move.</span></div>', unsafe_allow_html=True)
 
     # Sperm Concentration
     concentration = st.number_input(
         '🔬 Sperm Concentration (million/mL)  ',
         0.0, 300.0, 50.0, 0.1,
     )
-    st.markdown('<div class="tooltip">❓<span class="tooltiptext">Sperm concentration is usually between 15-100 million sperm per mL.</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="tooltip" title="Sperm concentration is usually between 15-100 million sperm per mL.">❓<span class="tooltiptext">Sperm concentration is usually between 15-100 million sperm per mL.</span></div>', unsafe_allow_html=True)
 
     # Normal Morphology
     normal_sperm = st.number_input(
         '🌟 Normal Morphology (%)  ',
         0.0, 100.0, 14.0, 0.1,
     )
-    st.markdown('<div class="tooltip">❓<span class="tooltiptext">Normal sperm morphology is typically between 4-14%.</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="tooltip" title="Normal sperm morphology is typically between 4-14%.">❓<span class="tooltiptext">Normal sperm morphology is typically between 4-14%.</span></div>', unsafe_allow_html=True)
 
     # Validate input consistency
     if progressive + non_progressive + immotile != 100:
